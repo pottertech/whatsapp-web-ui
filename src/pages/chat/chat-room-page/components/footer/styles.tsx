@@ -39,12 +39,6 @@ export const Form = styled.form`
   flex: 1;
 `;
 
-export const Form = styled.form`
-  display: flex;
-  align-items: center;
-  flex: 1;
-`;
-
 export const Button = styled.button<{ readonly showIcon: boolean }>`
   transform: ${(props) => (props.showIcon ? "scale(1)" : "scale(0)")};
   opacity: ${(props) => (props.showIcon ? 1 : 0)};

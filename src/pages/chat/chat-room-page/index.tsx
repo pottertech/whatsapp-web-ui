@@ -35,7 +35,7 @@ export default function ChatRoomPage() {
     if (activeInbox) {
       setMessages(getMessagesForChat(activeInbox.id));
     }
-  }, [activeInbox?.id]);
+  }, [activeInbox?.id, activeInbox]);
 
   const handleSendMessage = (message: string, isUser: boolean) => {
     if (!activeInbox) return;
