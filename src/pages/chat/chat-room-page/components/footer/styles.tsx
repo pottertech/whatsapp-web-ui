@@ -33,6 +33,12 @@ export const ButtonsContainer = styled.div`
   bottom: 50px;
 `;
 
+export const Form = styled.form`
+  display: flex;
+  align-items: center;
+  flex: 1;
+`;
+
 export const Button = styled.button<{ readonly showIcon: boolean }>`
   transform: ${(props) => (props.showIcon ? "scale(1)" : "scale(0)")};
   opacity: ${(props) => (props.showIcon ? 1 : 0)};
@@ -85,9 +91,19 @@ export const Input = styled.input`
   &:focus {
     outline: none;
   }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `;
 
 export const SendMessageButton = styled.button`
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   .icon {
     margin-left: 8px;
     margin-right: 8px;

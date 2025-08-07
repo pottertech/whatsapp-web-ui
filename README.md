@@ -22,7 +22,30 @@ To run the application, follow these steps:
 1. Clone this repository to your local machine
 2. Open the terminal and navigate to the project directory
 3. Run `npm install` to install the dependencies
-4. Run `npm start` to start the application
+4. Copy `.env.example` to `.env` and configure your n8n webhook URL
+5. Run `npm start` to start the application
+
+## n8n Webhook Integration
+This application integrates with n8n webhooks to process chat messages. To set up the integration:
+
+1. Create a webhook in your n8n workflow
+2. Set the `REACT_APP_N8N_WEBHOOK_URL` environment variable to your webhook URL
+3. Your n8n workflow should expect a POST request with the following structure:
+   ```json
+   {
+     "message": "User message text",
+     "timestamp": "2023-01-01T12:00:00.000Z",
+     "chatId": "chat-id",
+     "userId": "user-id"
+   }
+   ```
+4. Your n8n workflow should respond with:
+   ```json
+   {
+     "response": "Bot response text",
+     "timestamp": "2023-01-01T12:00:00.000Z"
+   }
+   ```
 
 ## Project Structure
 The `common` code which can be reused in multiple parts of the application can be found in the common folder. This includes components, hooks, themes, and types. <br />

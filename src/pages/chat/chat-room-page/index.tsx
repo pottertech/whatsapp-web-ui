@@ -8,6 +8,8 @@ import ProfileSection from "./components/profile";
 import MessagesList from "./components/messages-list";
 import SearchSection from "./components/search-section";
 import useNavigateToChat from "./hooks/useNavigateToChat";
+import { addMessage, getMessagesForChat } from "./components/messages-list/data/get-messages";
+import { useState, useEffect } from "react";
 import { Container, Body, Background, FooterContainer, ScrollButton } from "./styles";
 
 export default function ChatRoomPage() {
@@ -24,6 +26,24 @@ export default function ChatRoomPage() {
     shouldScrollToBottom,
   } = useChatRoom();
   useNavigateToChat(activeInbox);
+  
+  const [messages, setMessages] = useState(() => 
+    activeInbox ? getMessagesForChat(activeInbox.id) : []
+  );
+
+  useEffect(() => {
+    if (activeInbox) {
+      setMessages(getMessagesForChat(activeInbox.id));
+    }
+  }, [activeInbox?.id]);
+
+  const handleSendMessage = (message: string, isUser: boolean) => {
+    if (!activeInbox) return;
+    
+    addMessage(activeInbox.id, message, isUser);
+    setMessages(getMessagesForChat(activeInbox.id));
+    setShouldScrollToBottom(true);
+  };
 
   return (
     <ChatLayout>
@@ -40,6 +60,8 @@ export default function ChatRoomPage() {
           <MessagesList
             onShowBottomIcon={handleShowIcon}
             shouldScrollToBottom={shouldScrollToBottom}
+            chatId={activeInbox?.id}
+            messages={messages}
           />
           <FooterContainer>
             {isShowIcon && (
@@ -47,7 +69,10 @@ export default function ChatRoomPage() {
                 <Icon id="downArrow" />
               </ScrollButton>
             )}
-            <Footer />
+            <Footer 
+              onSendMessage={handleSendMessage}
+              chatId={activeInbox?.id}
+            />
           </FooterContainer>
         </Body>
         <Sidebar title="Search" isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)}>

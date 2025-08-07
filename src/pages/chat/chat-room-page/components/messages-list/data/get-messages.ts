@@ -9,6 +9,13 @@ export type Message = {
   isOpponent: boolean;
 };
 
+export type MessageStore = {
+  [chatId: string]: Message[];
+};
+
+// Store for dynamic messages
+let messageStore: MessageStore = {};
+
 const messages: Message[] = [
   {
     id: "1",
@@ -188,7 +195,13 @@ const messages: Message[] = [
   },
 ];
 
-export function getMessages(): Message[] {
+export function getMessages(chatId?: string): Message[] {
+  // If we have dynamic messages for this chat, return them
+  if (chatId && messageStore[chatId]) {
+    return messageStore[chatId];
+  }
+
+  // Otherwise return static messages
   const totalMessagesLength = messages.length;
   let randomNumber = Math.floor(Math.random() * totalMessagesLength);
 
@@ -196,4 +209,26 @@ export function getMessages(): Message[] {
   if (randomNumber === 1) randomNumber = 2; // so we always have atleast 1-2 messages.
 
   return messages.slice(0, randomNumber);
+}
+
+export function addMessage(chatId: string, message: string, isUser: boolean): void {
+  if (!messageStore[chatId]) {
+    // Initialize with existing messages if this is the first dynamic message
+    messageStore[chatId] = [...getMessages()];
+  }
+
+  const newMessage: Message = {
+    id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    body: message,
+    date: new Date().toLocaleDateString(),
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    messageStatus: isUser ? "SENT" : "READ",
+    isOpponent: !isUser,
+  };
+
+  messageStore[chatId].push(newMessage);
+}
+
+export function getMessagesForChat(chatId: string): Message[] {
+  return messageStore[chatId] || getMessages();
 }

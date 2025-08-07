@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import Icon from "common/components/icons";
 import useScrollToBottom from "./hooks/useScrollToBottom";
-import { getMessages, Message } from "./data/get-messages";
+import { getMessagesForChat, Message } from "./data/get-messages";
 import {
   ChatMessage,
   ChatMessageFiller,
@@ -18,16 +18,19 @@ import {
 type MessagesListProps = {
   onShowBottomIcon: Function;
   shouldScrollToBottom?: boolean;
+  chatId?: string;
+  messages?: Message[];
 };
 
 export default function MessagesList(props: MessagesListProps) {
-  const { onShowBottomIcon, shouldScrollToBottom } = props;
+  const { onShowBottomIcon, shouldScrollToBottom, chatId, messages: propMessages } = props;
 
   const params = useParams();
   const messages = useMemo(() => {
-    return getMessages();
+    if (propMessages) return propMessages;
+    return getMessagesForChat(chatId || params.id || '');
     // eslint-disable-next-line
-  }, [params.id]);
+  }, [params.id, chatId, propMessages]);
   const { containerRef, lastMessageRef } = useScrollToBottom(
     onShowBottomIcon,
     shouldScrollToBottom,
